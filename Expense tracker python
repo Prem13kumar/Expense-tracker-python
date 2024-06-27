@@ -1,0 +1,92 @@
+Expense Tracker in python
+
+import sqlite3
+from datetime import datetime
+
+# SQLite connection
+conn = sqlite3.connect('expenses.db')
+c = conn.cursor()
+
+# Create table if not exists
+c.execute('''CREATE TABLE IF NOT EXISTS expenses
+             (date TEXT, category TEXT, amount REAL, description TEXT)''')
+conn.commit()
+
+# Function to log an expense
+def log_expense(category, amount, description):
+    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    c.execute("INSERT INTO expenses VALUES (?, ?, ?, ?)", (date, category, amount, description))
+    conn.commit()
+    print("Expense logged successfully.")
+
+# Function to view expenses
+def view_expenses():
+    c.execute("SELECT * FROM expenses")
+    rows = c.fetchall()
+    for row in rows:
+        print(row)
+
+# Example usage
+log_expense("Food", 50.75, "Dinner with friends")
+log_expense("Transportation", 30.00, "Taxi fare")
+view_expenses()
+
+# Close connection
+conn.close()
+ or in second model of program
+
+class Expense:
+    def __init__(self, description, amount, category):
+        self.description = description
+        self.amount = amount
+        self.category = category
+
+class ExpenseTracker:
+    def __init__(self):
+        self.expenses = []
+
+    def add_expense(self, expense):
+        self.expenses.append(expense)
+
+    def total_expenses(self):
+        return sum(expense.amount for expense in self.expenses)
+
+    def expenses_by_category(self, category):
+        return [expense for expense in self.expenses if expense.category == category]
+
+# Example usage:
+tracker = ExpenseTracker()
+
+# Adding expenses
+expense1 = Expense("Groceries", 50.00, "Food")
+tracker.add_expense(expense1)
+
+expense2 = Expense("Internet Bill", 60.00, "Utilities")
+tracker.add_expense(expense2)
+
+expense3 = Expense("Dinner Out", 30.00, "Food")
+tracker.add_expense(expense3)
+
+# Total expenses
+total = tracker.total_expenses()
+print(f"Total expenses: ${total:.2f}")
+
+# Expenses by category
+food_expenses = tracker.expenses_by_category("Food")
+print("\nFood Expenses:")
+for expense in food_expenses:
+    print(f"{expense.description}: ${expense.amount:.2f}")
+
+explain the program 
+User Interface:
+You can use command-line interface (CLI) or graphical user interface (GUI) using libraries like Tkinter for simplicity.
+Data Storage:
+Use a simple file-based system (like CSV) or SQLite database to store expenses.
+Adding Expenses:
+Allow users to input new expenses with details such as date, category, amount, etc.Viewing Expenses: Provide options to view expenses by date range, category, or total spending.
+Editing and Deleting:
+Implement functionalities to edit or delete expenses.
+Summary and Analytics: 
+Calculate and display summaries like total spending, average spending per category, etc.Budgeting: Optionally, you can add budgeting features to compare expenses against predefined budgets.
+Error Handling:
+Implement robust error handling for user inputs and file/database operations.
